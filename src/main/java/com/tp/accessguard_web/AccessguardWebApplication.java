@@ -1,6 +1,7 @@
 package com.tp.accessguard_web;
 
 import com.tp.accessguard_web.repository.PersonRepository;
+import com.tp.accessguard_web.repository.SectorRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +21,16 @@ public class AccessguardWebApplication {
         return args -> {
             System.out.println("=== PERSONAS EN BD ===");
             repo.findAll().forEach(p ->
-                    System.out.println(p.getId() + " - " + p.getFullName() + " - " + p.getStatus()))
-        ;};
+                    System.out.println(p.getId() + " - " + p.getFullName() + " - " + p.getStatus()));
+        };
+    }
+
+    @Bean
+    CommandLineRunner testSector(SectorRepository repo){
+        return args -> {
+            System.out.println("=== SECTORES EN BD ===");
+            repo.findAll().forEach(sector ->
+                    System.out.println(sector.getId() + " - " + sector.getName() + " - " + sector.getCode() + " - active=" + sector.isActive()));
+        };
     }
 }
