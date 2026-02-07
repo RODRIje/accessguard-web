@@ -1,5 +1,6 @@
 package com.tp.accessguard_web;
 
+import com.tp.accessguard_web.repository.AccessEventRepository;
 import com.tp.accessguard_web.repository.PersonRepository;
 import com.tp.accessguard_web.repository.SectorRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -31,6 +32,15 @@ public class AccessguardWebApplication {
             System.out.println("=== SECTORES EN BD ===");
             repo.findAll().forEach(sector ->
                     System.out.println(sector.getId() + " - " + sector.getName() + " - " + sector.getCode() + " - active=" + sector.isActive()));
+        };
+    }
+
+    @Bean
+    CommandLineRunner testAccessEvent(AccessEventRepository repo){
+        return args -> {
+            System.out.println("=== ULTIMOS ACCESS_EVENT ===");
+            repo.findAll().stream().limit(5).forEach(ev ->
+                    System.out.println(ev.getId() + " ts=" + ev.getTs() + " result=" + ev.getResult() + " reason=" + ev.getReason()));
         };
     }
 }
