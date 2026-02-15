@@ -1,5 +1,6 @@
 package com.tp.accessguard_web.service.impl;
 
+import com.tp.accessguard_web.dto.AccessCheckRequest;
 import com.tp.accessguard_web.dto.AccessCheckResponse;
 import com.tp.accessguard_web.model.AccessEvent;
 import com.tp.accessguard_web.model.Person;
@@ -42,7 +43,11 @@ public class AccessServiceImpl implements AccessService {
 
     @Override
     @Transactional
-    public AccessCheckResponse checkAccess(String badgeId, String sectorCode, LocalDateTime ts) {
+    public AccessCheckResponse checkAccess(AccessCheckRequest request) {
+        String badgeId = request.getBadgeId();
+        String sectorCode = request.getSectorCode();
+        LocalDateTime ts = request.getTimestamp();
+
         if (ts == null) ts = LocalDateTime.now();
 
         // 1) persona
