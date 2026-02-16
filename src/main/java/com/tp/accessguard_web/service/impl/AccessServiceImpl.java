@@ -2,6 +2,7 @@ package com.tp.accessguard_web.service.impl;
 
 import com.tp.accessguard_web.dto.AccessCheckRequest;
 import com.tp.accessguard_web.dto.AccessCheckResponse;
+import com.tp.accessguard_web.dto.AccessEventResponse;
 import com.tp.accessguard_web.model.AccessEvent;
 import com.tp.accessguard_web.model.Person;
 import com.tp.accessguard_web.model.Sector;
@@ -12,11 +13,13 @@ import com.tp.accessguard_web.repository.PersonRepository;
 import com.tp.accessguard_web.repository.SectorRepository;
 import com.tp.accessguard_web.service.AccessService;
 import jakarta.transaction.Transactional;
+import org.antlr.v4.runtime.ListTokenSource;
 import org.springframework.stereotype.Service;
 import com.tp.accessguard_web.model.enums.EventResult;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -83,6 +86,31 @@ public class AccessServiceImpl implements AccessService {
 
         logEvent(person, sector, ts, EventResult.ALLOW, "Acceso permitido");
         return new AccessCheckResponse(true,"Acceso permitido");
+    }
+
+    @Override
+    public List<AccessEventResponse> getEventsByPerson(String badgeId) {
+
+        Optional<Person> optionalPerson = personRepo.findByBadgeId(badgeId);
+
+        if (optionalPerson.isEmpty()){
+            return List.of();
+        }
+
+        Person person = optionalPerson.get();
+
+        List<AccessEvent> events =
+                eventRepo.findAllByPerson_IdOrderByTsDesc(person.getId());
+
+        return events.stream()
+                .map(event -> new AccessEventResponse(
+                        event.getPerson().getBadgeId(),
+                        event.getSector().getCode(),
+                        event.getTs(),
+                        event.getResult().name(),
+                        event.getReason()
+                ))
+                .toList();
     }
 
     private boolean hasValidPermission(Long personId, Long sectorId, LocalDateTime ts){

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AccessEventRepository extends JpaRepository<AccessEvent, Long> {
 
-    List<AccessEvent> findAllBySectorIdAndTsBetweenOrderByTsDesc(Long sectorId, LocalDateTime from, LocalDateTime to);
+    List<AccessEvent> findAllBySector_IdAndTsBetweenOrderByTsDesc(Long sectorId, LocalDateTime from, LocalDateTime to);
 
-    List<AccessEvent> findAllByPersonIdOrderByTsDesc(Long personId);
+    List<AccessEvent> findAllByPerson_IdOrderByTsDesc(Long personId);
 }
