@@ -27,9 +27,7 @@ public class AccessController {
 
     @GetMapping("/events")
     public ResponseEntity<List<AccessEventResponse>> getEventsByPerson(@RequestParam String badgeId){
-
         List<AccessEventResponse> events = accessService.getEventsByPerson(badgeId);
-
         return ResponseEntity.ok(events);
     }
 }
