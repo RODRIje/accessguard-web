@@ -2,6 +2,8 @@ package com.tp.accessguard_web.service.impl;
 
 import com.tp.accessguard_web.dto.PersonRequestDTO;
 import com.tp.accessguard_web.dto.PersonResponseDTO;
+import com.tp.accessguard_web.exception.BadRequestException;
+import com.tp.accessguard_web.exception.ResourceNotFoundException;
 import com.tp.accessguard_web.model.Person;
 import com.tp.accessguard_web.model.enums.PersonStatus;
 import com.tp.accessguard_web.repository.PersonRepository;
@@ -22,7 +24,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonResponseDTO create(PersonRequestDTO dto) {
         if (personRepo.existsByBadgeId(dto.getBadgeId())){
-            throw new RuntimeException("Ya existe una persona con ese badgeId");
+            throw new BadRequestException("Ya existe una persona con ese badgeId");
         }
 
         Person person = new Person();
@@ -37,7 +39,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonResponseDTO update(Long id, PersonRequestDTO dto) {
         Person person = personRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Persona no encontrada"));
 
         person.setFullName(dto.getName());
         person.setDocumentId(dto.getDocument());
@@ -48,7 +50,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonResponseDTO getById(Long id) {
         Person person = personRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Persona no encontrada"));
 
         return mapToResponse(person);
     }
@@ -62,7 +64,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void desactivate(Long id) {
         Person person = personRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Persona no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Persona no encontrada"));
 
         person.setStatus(PersonStatus.BLOQUED);
         personRepo.save(person);
