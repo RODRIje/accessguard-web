@@ -11,4 +11,8 @@ public interface SectorRepository extends JpaRepository<Sector, Long> {
 
     //Metodo para validar acceso solo a sectores activos
     Optional<Sector> findByCodeAndActiveTrue(String code);
+
+    boolean existsByCode(String code);
+
+    boolean existsByName(String name);
 }
